@@ -39,6 +39,58 @@ const ProfessionalCard = ({ professional }: { professional: Professional }) => (
 
 export default function Home() {
   const locations: Professional['location'][] = ['Milano', 'Lombardia', 'Veneto'];
+  const heroRef = React.useRef<HTMLElement | null>(null);
+  const heroBackgroundRef = React.useRef<HTMLDivElement | null>(null);
+  const heroOverlayRef = React.useRef<HTMLDivElement | null>(null);
+  const heroGlowRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    let animationFrame = 0;
+    const state = { scrollY: 0 };
+
+    const updateStyles = () => {
+      animationFrame = 0;
+      const heroHeight = heroRef.current?.offsetHeight ?? 1;
+      const progress = Math.min(Math.max(state.scrollY / (heroHeight * 0.85), 0), 1);
+      const parallaxOffset = Math.min(state.scrollY * 0.2, heroHeight * 0.25);
+      const brightness = 0.55 + progress * 0.45;
+      const contrast = 0.85 + progress * 0.25;
+      const saturation = 0.6 + progress * 0.4;
+      const grayscale = 0.25 * (1 - progress);
+
+      if (heroBackgroundRef.current) {
+        heroBackgroundRef.current.style.transform = `translate3d(0, ${parallaxOffset}px, 0) scale(1.08)`;
+        heroBackgroundRef.current.style.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturation}) grayscale(${grayscale})`;
+      }
+
+      if (heroOverlayRef.current) {
+        heroOverlayRef.current.style.opacity = `${0.65 * (1 - progress)}`;
+      }
+
+      if (heroGlowRef.current) {
+        heroGlowRef.current.style.opacity = `${0.55 - progress * 0.35}`;
+      }
+    };
+
+    const handleScroll = () => {
+      state.scrollY = window.scrollY;
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(updateStyles);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+
+    return () => {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -60,21 +112,48 @@ export default function Home() {
       </header>
 
       <main>
-        <section className="relative flex h-[70vh] min-h-[500px] items-center justify-center text-center">
-          <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent to-background" />
-          <Image
-            src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBjbGluaWN8ZW58MHx8fHwxNzIxODcyMDI3fDA&ixlib=rb-4.1.0&q=80&w=1080"
-            alt="Woman with perfect skin"
-            fill
-            className="object-cover"
-            priority
-            data-ai-hint="beauty clinic"
+        <section
+          ref={heroRef}
+          className="relative flex h-screen min-h-[640px] items-center justify-center overflow-hidden text-center"
+        >
+          <div
+            ref={heroBackgroundRef}
+            className="absolute inset-0 z-0 transition-transform duration-300"
+            style={{
+              transform: 'translate3d(0, 0, 0) scale(1.08)',
+              filter: 'brightness(0.55) contrast(0.85) saturate(0.6) grayscale(0.25)',
+            }}
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBjbGluaWN8ZW58MHx8fHwxNzIxODcyMDI3fDA&ixlib=rb-4.1.0&q=80&w=1080"
+              alt="Woman with perfect skin"
+              fill
+              className="object-cover"
+              priority
+              data-ai-hint="beauty clinic"
+            />
+          </div>
+          <div ref={heroOverlayRef} className="absolute inset-0 z-10 bg-black" style={{ opacity: 0.65 }} />
+          <div
+            ref={heroGlowRef}
+            className="pointer-events-none absolute inset-0 z-20"
+            style={{
+              background:
+                'radial-gradient(circle at center, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.18) 28%, rgba(0,0,0,0) 62%)',
+              opacity: 0.55,
+            }}
           />
-          <div className="container relative z-20 mx-auto px-4">
-            <h1 className="font-headline text-5xl tracking-tight text-foreground md:text-7xl lg:text-8xl">
+          <div className="container relative z-30 mx-auto flex flex-col items-center px-4">
+            <div className="mb-6 flex items-center justify-center">
+              <div className="relative h-20 w-20 md:h-24 md:w-24">
+                <span className="absolute inset-0 rounded-full border border-white/80" />
+                <span className="absolute inset-3 rounded-full border border-white/70" />
+              </div>
+            </div>
+            <h1 className="font-headline text-5xl tracking-tight text-white md:text-7xl lg:text-8xl">
               Bellezza Clinic
             </h1>
-            <p className="mx-auto mt-6 max-w-3xl font-body text-lg text-muted-foreground md:text-xl">
+            <p className="mx-auto mt-6 max-w-3xl font-body text-lg text-white/70 md:text-xl">
               Il network professionale del beauty: una selezione di massima eccellenza composta da medici, dottori, chirurghi e consulenti.
             </p>
           </div>

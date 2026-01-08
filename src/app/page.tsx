@@ -39,7 +39,7 @@ export default function Home() {
         <div className="container mx-auto flex h-20 items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <ApexLogo className="h-8 w-8 text-primary" />
-            <span className="font-headline text-2xl tracking-wider text-primary">Apex Beauty</span>
+            <span className="font-headline text-2xl tracking-wider text-primary">Bellezza Clinic</span>
           </div>
           <nav className="hidden items-center gap-6 md:flex">
             <a href="#network" className="font-body text-sm text-muted-foreground transition-colors hover:text-foreground">
@@ -59,7 +59,7 @@ export default function Home() {
             />
             <div className="container mx-auto px-4 z-20 relative">
                 <h1 className="font-headline text-5xl md:text-7xl lg:text-8xl tracking-tight text-foreground">
-                    Apex Beauty Network
+                    Bellezza Clinic
                 </h1>
                 <p className="mt-6 max-w-3xl mx-auto font-body text-lg md:text-xl text-muted-foreground">
                     Il network professionale del beauty: una selezione di massima eccellenza composta da medici, dottori, chirurghi e consulenti.
@@ -108,7 +108,7 @@ export default function Home() {
       
       <footer id="contact" className="border-t border-accent/30 bg-card">
         <div className="container mx-auto px-4 py-8 text-center text-muted-foreground">
-            <p className="text-sm">&copy; {new Date().getFullYear()} Apex Beauty Network. Tutti i diritti riservati.</p>
+            <p className="text-sm">&copy; {new Date().getFullYear()} Bellezza Clinic. Tutti i diritti riservati.</p>
         </div>
       </footer>
     </div>

@@ -4,7 +4,7 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Bellezza Clinic',
+  title: 'apex beauty network',
   description: 'Il network professionale del beauty: una selezione di massima eccellenza professionale.',
 };
 
